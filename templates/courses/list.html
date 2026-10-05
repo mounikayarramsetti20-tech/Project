@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Courses - Student Performance System{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+
+        <div>
+            <h1>Courses</h1>
+            <p>Manage all courses and course codes.</p>
+        </div>
+
+        <a href="/courses/new" class="btn">
+            + Add Course
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    {% if courses %}
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Course Name</th>
+                <th>Course Code</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for course in courses %}
+
+            <tr>
+
+                <td>{{ course.id }}</td>
+
+                <td>
+                    <strong>{{ course.name }}</strong>
+                </td>
+
+                <td>
+                    <span class="badge">
+                        {{ course.code }}
+                    </span>
+                </td>
+
+                <td>
+
+                    <a
+                        href="/courses/{{ course.id }}/edit"
+                        class="btn"
+                    >
+                        Edit
+                    </a>
+
+                    <form
+                        action="/courses/{{ course.id }}"
+                        method="POST"
+                        style="display: inline; padding: 0; box-shadow: none; margin: 0;"
+                        onsubmit="return confirm('Are you sure you want to delete this course?');"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="_method"
+                            value="DELETE"
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn-danger"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="alert alert-info">
+        No courses found.
+    </div>
+
+    <a href="/courses/new" class="btn">
+        Add Your First Course
+    </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

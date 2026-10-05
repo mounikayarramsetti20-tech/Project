@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Student Performance System{% endblock %}
+
+{% block content %}
+
+<div class="login-container">
+
+    <div class="section">
+
+        <h1>Admin Login</h1>
+
+        <p style="margin-bottom: 20px;">
+            Login to access the Student Performance Analytics System.
+        </p>
+
+        <form id="loginForm">
+
+            <label for="email">Email</label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label for="password">Password</label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <div id="message"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const message = document.getElementById("message");
+
+    try {
+
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            localStorage.setItem(
+                "access_token",
+                data.access_token
+            );
+
+            message.className = "alert alert-success";
+            message.textContent = "Login successful!";
+
+            setTimeout(function() {
+                window.location.href = "/dashboard";
+            }, 500);
+
+        } else {
+
+            message.className = "alert alert-danger";
+            message.textContent =
+                data.message || "Login failed.";
+
+        }
+
+    } catch (error) {
+
+        message.className = "alert alert-danger";
+        message.textContent =
+            "Unable to connect to the server.";
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

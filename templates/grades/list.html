@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Grades - Student Performance System{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+
+        <div>
+            <h1>Grades</h1>
+            <p>View and manage student performance records.</p>
+        </div>
+
+        <a href="/grades/new" class="btn">
+            + Assign Grade
+        </a>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    {% if grades %}
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Score</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for grade in grades %}
+
+            <tr>
+
+                <td>{{ grade.id }}</td>
+
+                <td>
+                    {% if grade.student %}
+                        {{ grade.student.name }}
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if grade.course %}
+                        {{ grade.course.name }}
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+
+                <td>
+                    <span class="badge">
+                        {{ grade.score }}
+                    </span>
+                </td>
+
+                <td>{{ grade.date }}</td>
+
+                <td>
+
+                    <a
+                        href="/grades/{{ grade.id }}/edit"
+                        class="btn"
+                    >
+                        Edit
+                    </a>
+
+                    <form
+                        action="/grades/{{ grade.id }}"
+                        method="POST"
+                        style="display: inline; padding: 0; box-shadow: none; margin: 0;"
+                        onsubmit="return confirm('Are you sure you want to delete this grade?');"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="_method"
+                            value="DELETE"
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn-danger"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="alert alert-info">
+        No grade records found.
+    </div>
+
+    <a href="/grades/new" class="btn">
+        Assign Your First Grade
+    </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
